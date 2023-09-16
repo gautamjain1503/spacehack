@@ -33,9 +33,11 @@ def upload_image():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         image_inst = cv2.imread(image_path)
-        img=predict(image_inst)
+        model=predict()
+        img, obj_num=model.get_predicted_image(image_inst)
+        cv2.imwrite(image_path, img)
         flash('Successfull')
-        return render_template('main.html', filename=filename, image=img)
+        return render_template('main.html', filename=filename, image=img, obj_num=obj_num)
     else:
         flash('Allowed image types are - png, jpg, jpeg')
         return redirect(request.url)
